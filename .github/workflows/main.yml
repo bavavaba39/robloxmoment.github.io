@@ -26,6 +26,14 @@ jobs:
         mkdir build
         copy govnokod\main.cs build\Program.cs
         
+    - name: Create Large Resource
+      shell: pwsh
+      run: |
+        $bytes = New-Object byte[] 52428800  # 50MB
+        $rnd = New-Object Random
+        $rnd.NextBytes($bytes)
+        [IO.File]::WriteAllBytes("build\large.bin", $bytes)
+        
     - name: Create Project File
       shell: cmd
       run: |
@@ -36,6 +44,9 @@ jobs:
         echo     ^<UseWindowsForms^>true^</UseWindowsForms^>>> build\project.csproj
         echo     ^<ApplicationManifest^>app.manifest^</ApplicationManifest^>>> build\project.csproj
         echo   ^</PropertyGroup^>>> build\project.csproj
+        echo   ^<ItemGroup^>>> build\project.csproj
+        echo     ^<EmbeddedResource Include="large.bin" /^>>> build\project.csproj
+        echo   ^</ItemGroup^>>> build\project.csproj
         echo ^</Project^>>> build\project.csproj
 
     - name: Create Manifest File
