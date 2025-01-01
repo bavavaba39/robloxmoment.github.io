@@ -11,7 +11,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
     
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.0.2
@@ -59,7 +59,10 @@ jobs:
         dotnet build -c Release
 
     - name: Upload Build Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
+      with:
+        name: app
+        path: build/bin/Release/net48/
       with:
         name: app
         path: build/bin/Release/net48/
