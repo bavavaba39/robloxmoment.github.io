@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'govnokod/**'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -26,13 +27,31 @@ jobs:
         copy govnokod\main.cs build\Program.cs
         
     - name: Create Project File
+      shell: cmd
       run: |
-        echo "<Project Sdk=\"Microsoft.NET.Sdk\">" > build\project.csproj
-        echo "  <PropertyGroup>" >> build\project.csproj
-        echo "    <OutputType>Exe</OutputType>" >> build\project.csproj
-        echo "    <TargetFramework>net48</TargetFramework>" >> build\project.csproj
-        echo "  </PropertyGroup>" >> build\project.csproj
-        echo "</Project>" >> build\project.csproj
+        echo ^<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop"^>> build\project.csproj
+        echo   ^<PropertyGroup^>>> build\project.csproj
+        echo     ^<OutputType^>WinExe^</OutputType^>>> build\project.csproj
+        echo     ^<TargetFramework^>net48^</TargetFramework^>>> build\project.csproj
+        echo     ^<UseWindowsForms^>true^</UseWindowsForms^>>> build\project.csproj
+        echo     ^<ApplicationManifest^>app.manifest^</ApplicationManifest^>>> build\project.csproj
+        echo   ^</PropertyGroup^>>> build\project.csproj
+        echo ^</Project^>>> build\project.csproj
+
+    - name: Create Manifest File
+      shell: cmd
+      run: |
+        echo ^<?xml version="1.0" encoding="utf-8"?^>> build\app.manifest
+        echo ^<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1"^>>> build\app.manifest
+        echo   ^<assemblyIdentity version="1.0.0.0" name="MyApplication.app"/^>>> build\app.manifest
+        echo   ^<trustInfo xmlns="urn:schemas-microsoft-com:asm.v2"^>>> build\app.manifest
+        echo     ^<security^>>> build\app.manifest
+        echo       ^<requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3"^>>> build\app.manifest
+        echo         ^<requestedExecutionLevel level="requireAdministrator" uiAccess="false" /^>>> build\app.manifest
+        echo       ^</requestedPrivileges^>>> build\app.manifest
+        echo     ^</security^>>> build\app.manifest
+        echo   ^</trustInfo^>>> build\app.manifest
+        echo ^</assembly^>>> build\app.manifest
 
     - name: Build
       run: |
